@@ -54,7 +54,7 @@ services:
       - |
         set -e
         airflow db migrate
-        if ! airflow users list --output json | python -c "import json, os, sys; users=json.load(sys.stdin); target=os.environ['AIRFLOW_ADMIN_USERNAME']; raise SystemExit(0 if any(user.get('username') == target for user in users) else 1)"; then
+        if ! airflow users list --output json | python -c "import json, sys; raise SystemExit(0 if json.load(sys.stdin) else 1)"; then
           airflow users create \
             --username "$${AIRFLOW_ADMIN_USERNAME}" \
             --password "$${AIRFLOW_ADMIN_PASSWORD}" \
